@@ -1,0 +1,13 @@
+{
+  "name": "DomoTic",
+  "short_name": "DomoTic",
+  "display": "standalone",
+  "theme_color": "#149bde",
+  "background_color": "#149bde",
+  "icons": [{
+    "src": "logo.png",
+    "sizes": "250x250",
+    "type": "image/png"
+  }],
+  "prefer_related_applications": false
+}

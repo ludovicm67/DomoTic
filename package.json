@@ -1,0 +1,19 @@
+{
+  "name": "domotic",
+  "version": "1.0.0",
+  "description": "Give orders to your computer remotely",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "node index.js",
+    "start": "node index.js"
+  },
+  "author": "ludovicm67",
+  "license": "ISC",
+  "dependencies": {
+    "delete": "^0.3.2",
+    "fs": "0.0.2",
+    "http": "0.0.0",
+    "request": "^2.72.0"
+  }
+}

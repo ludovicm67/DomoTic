@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+<title>DomoTic by @ludovicm67</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<style>
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+body {
+	font-family: sans-serif;
+	font-size: 14px;
+	background: #000 url(./bg.jpg) center center fixed no-repeat;
+	background-size: cover;
+}
+#app {
+	padding: 50px;
+	text-align: center;
+}
+h1 {
+	color: #fff;
+	font-size: 20px;
+	margin-bottom: 5px;
+	text-shadow: 1px 1px 1px #212121;
+}
+.tile {
+	display: inline-block;
+	background-color: rgba(1, 50, 100, .4);
+	color: #fff;
+	text-align: left;
+	padding: 5px;
+	width: 250px;
+	height: 120px;
+	margin: 0 10px 10px 0;
+	border: 4px solid transparent;
+	transition: .4s;
+	cursor: pointer;
+	outline: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.tile:hover, .tile:focus {
+	border: 4px solid rgba(0, 0, 0, .2);
+}
+
+#mouse, #screen {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: #e6e6e6;
+}
+#screen-content {
+	height: 95vh;
+	width: 100%;
+	overflow: auto;
+}
+#mouse-left, #mouse-right {
+	position: fixed;
+	bottom: 0;
+	background-color: #ddd;
+	border: 2px solid #cacaca;
+	height: 20vh;
+	transition: .4s;
+	cursor: pointer;
+}
+#mouse-left:hover, #mouse-right:hover {
+	background-color: #ccc;
+}
+#mouse-left {
+	left: 0;
+	right: 50%;
+}
+#mouse-right {
+	right: 0;
+	left: 50%;
+}
+#mouse-pad {
+	position: fixed;
+	top: 5%;
+	bottom: 20%;
+	left: 0;
+	right: 0;
+}
+#close-mouse, #close-screen {
+	text-align: center;
+	font-variant: small-caps;
+	background-color: #ddd;
+	transition: .4s;
+	height: 5vh;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	line-height: 5vh;
+	cursor: pointer;
+}
+#close-mouse:hover, #close-screen:hover {
+	background-color: #ccc;
+}
+.hidden {
+	display: none;
+}
+</style>
+</head>
+<body>
+	<div id="app">
+		<h1>DomoTic <small>by @ludovicm67</small></h1>
+		<div class="tile" tabindex="1" data-cmd="lock">
+			<p>Vérouiller session</p>
+		</div>
+		<div class="tile" tabindex="1" data-cmd="volup">
+			<p>Volume +</p>
+		</div>
+		<div class="tile" tabindex="1" data-cmd="voldown">
+			<p>Volume -</p>
+		</div>
+		<div class="tile" tabindex="1" data-cmd="mute">
+			<p>Muet</p>
+		</div>
+		<div class="tile" tabindex="1" data-cmd="desktop">
+			<p>Bureau</p>
+		</div>
+		<div class="tile" tabindex="1" data-cmd="explorer">
+			<p>Explorateur de fichiers</p>
+		</div>
+		<div class="tile" tabindex="1" data-cmd="opencd">
+			<p>Ouvrir lecteur CD</p>
+		</div>
+		<div class="tile" tabindex="1" data-cmd="closecd">
+			<p>Fermer lecteur CD</p>
+		</div>
+		<div class="tile" tabindex="1" data-cmd="monitoroff">
+			<p>Éteindre les écrans</p>
+		</div>
+		<div class="tile" tabindex="1" data-cmd="monitoron">
+			<p>Allumer les écrans</p>
+		</div>
+		<div class="tile" tabindex="1" id="open-screen">
+			<p>Capture d'écran</p>
+		</div>
+		<div class="tile" tabindex="1" id="open-mouse">
+			<p>Souris</p>
+		</div>
+		<div class="tile" tabindex="1" data-cmd="mediaplaypause">
+			<p>MEDIA : Play/pause</p>
+		</div>
+		<div class="tile" tabindex="1" data-cmd="mediastop">
+			<p>MEDIA : Stop</p>
+		</div>
+		<div class="tile" tabindex="1" data-cmd="mediaprev">
+			<p>MEDIA : Précédent</p>
+		</div>
+		<div class="tile" tabindex="1" data-cmd="medianext">
+			<p>MEDIA : Suivant</p>
+		</div>
+		<div class="tile" tabindex="1" data-cmd="hardstop">
+			<p>Stopper le serveur</p>
+		</div>
+	</div>
+	<div id="mouse" class="hidden">
+		<div id="close-mouse">Fermer</div>
+		<div id="mouse-pad"></div>
+		<div id="mouse-left"></div>
+		<div id="mouse-right"></div>
+	</div>
+	<div id="screen" class="hidden">
+		<div id="close-screen">Fermer</div>
+		<div id="screen-content">An error has occured...</div>
+	</div>
+<script>
+// SimpleJS library written by @ludovicm67
+"function"!=typeof Object.assign&&!function(){Object.assign=function(target){"use strict";if(void 0===target||null===target)throw new TypeError("Cannot convert undefined or null to object");for(var output=Object(target),index=1;index<arguments.length;index++){var source=arguments[index];if(void 0!==source&&null!==source)for(var nextKey in source)Object.prototype.hasOwnProperty.call(source,nextKey)&&(output[nextKey]=source[nextKey])}return output}}(),function(){"function"!=typeof HTMLElement.prototype.appendChilds&&(HTMLElement.prototype.appendChilds=function(){for(var i=0;i<arguments.length;i++)this.appendChild(arguments[i])}),document.body||(document.body=document.getElementsByTagName("body")[0]),"function"!=typeof document.appendChilds&&document.body&&(document.appendChilds=function(){for(var i=0;i<arguments.length;i++)document.body.appendChild(arguments[i])}),"function"!=typeof HTMLElement.prototype.remove&&(HTMLElement.prototype.remove=function(){this.parentNode.removeChild(this)}),"function"!=typeof NodeList.prototype.remove&&(NodeList.prototype.remove=function(){for(var i=0;i<this.length;i++)this[i]&&this[i].parentNode&&this[i].parentNode.removeChild(this[i])}),"function"!=typeof HTMLCollection.prototype.remove&&(HTMLCollection.prototype.remove=function(){for(var i=0;i<this.length;i++)this[i]&&this[i].parentNode&&this[i].parentNode.removeChild(this[i])});var simpleElements={elem:function(str){return document.querySelectorAll(str)},newElem:function(elem,attrs){return Object.assign(document.createElement(elem),attrs)},removeElem:function(){for(var i=0;i<arguments.length;i++)arguments[i].parentNode.removeChild(arguments[i])}};"object"==typeof window.sJS?window.sJS=Object.assign(window.sJS,simpleElements):window.sJS=Object.assign({},simpleElements)}(),function(){var simpleInfos={infos:{name:"simpleJS",description:"A simple JavaScript library",author:"ludovicm67",repository:"https://github.com/ludovicm67/simple-js"},printInfos:function(){console.info("You can contribute to "+this.infos.name+" ("+this.infos.description+"), written by "+this.infos.author+" at "+this.infos.repository)}};"object"==typeof window.sJS?window.sJS=Object.assign(window.sJS,simpleInfos):window.sJS=Object.assign({},simpleInfos)}(),function(){var simpleRequest={ajax:function(init,callback){var requestObject;if("object"==typeof init?requestObject=Object.assign({},init):"string"==typeof init&&(requestObject={url:init}),requestObject.type||(requestObject.type="GET"),requestObject.data||(requestObject.data=null),"undefined"==typeof requestObject.async&&(requestObject.async=!0),"undefined"==typeof callback&&(callback="undefined"!=typeof requestObject.success?function(err,res){err||requestObject.success(res)}:function(err,res){err&&console.error(err)}),requestObject.url){var request=new XMLHttpRequest;if(request.open(requestObject.type,requestObject.url,requestObject.async),request.onload=function(){this.status>=200&&this.status<400?callback(null,this.response):(requestObject.error&&requestObject.error(),callback("Server returned a "+this.status+" error"))},requestObject.data)if(request.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=UTF-8"),"object"==typeof requestObject.data){var serialize=function(obj,prefix){var str=[];for(var p in obj)if(obj.hasOwnProperty(p)){var k=prefix?prefix+"["+p+"]":p,v=obj[p];str.push("object"==typeof v?serialize(v,k):encodeURIComponent(k)+"="+encodeURIComponent(v))}return str.join("&")};request.send(serialize(requestObject.data))}else request.send(requestObject.data);else request.send()}else requestObject.error&&requestObject.error(),callback("No URL found for performing this request.")},get:function(url,callback){"string"==typeof url?this.ajax({url:url,type:"GET"},callback):this.ajax(Object.assign({type:"GET"},url),callback)},getJSON:function(url,callback){this.get(url,function(err,content){if(err)callback(err);else try{callback(null,JSON.parse(content))}catch(e){callback(e)}})},post:function(url,callback){"string"==typeof url?this.ajax({url:url,type:"POST"},callback):this.ajax(Object.assign({type:"POST"},url),callback)}};"object"==typeof window.sJS?window.sJS=Object.assign(window.sJS,simpleRequest):window.sJS=Object.assign({},simpleRequest)}();
+
+
+// Execute the command when clicking a bloc
+var cmdsBlocs = document.querySelectorAll('[data-cmd]');
+for (var i = 0; i < cmdsBlocs.length; i++) {
+	cmdsBlocs[i].addEventListener('click', function () {
+		sJS.ajax('/cmd/' + this.dataset.cmd);
+	});
+}
+
+
+// START SCREEN
+
+
+// Open the screen
+document.getElementById('open-screen').addEventListener('click', function () {
+	document.getElementById('screen').classList.remove('hidden');
+	document.getElementById('screen-content').textContent = '';
+	var screenImg = sJS.newElem('img', {src: '/cmd/screen#' + new Date().getTime()});
+	document.getElementById('screen-content').appendChild(screenImg);
+	document.getElementById('app').classList.add('hidden');
+});
+
+// Close the screen
+document.getElementById('close-screen').addEventListener('click', function () {
+	document.getElementById('screen').classList.add('hidden');
+	document.getElementById('app').classList.remove('hidden');
+});
+
+// END SCREEN
+
+
+// START MOUSE
+
+// Left click
+document.getElementById('mouse-left').addEventListener('click', function () {
+	sJS.ajax('/cmd/mouseleftclick');
+});
+
+// Right click
+document.getElementById('mouse-right').addEventListener('click', function () {
+	sJS.ajax('/cmd/mouserightclick');
+});
+
+// Open the mouse
+document.getElementById('open-mouse').addEventListener('click', function () {
+	document.getElementById('mouse').classList.remove('hidden');
+	document.getElementById('app').classList.add('hidden');
+});
+
+// Close the mouse
+document.getElementById('close-mouse').addEventListener('click', function () {
+	document.getElementById('mouse').classList.add('hidden');
+	document.getElementById('app').classList.remove('hidden');
+});
+
+// Mouse pad
+var startX = null,
+	deltaX = null,
+	startY = null,
+	deltaY = null;
+
+var functionTouchMove = function (e) {
+	deltaX = e.targetTouches[0].pageX - startX;
+	deltaY = e.targetTouches[0].pageY - startY;
+	console.log(deltaX + 'x' + deltaY);
+	sJS.ajax({
+	  type: 'POST',
+	  url: '/cmd/mousemove',
+	  async: false,
+	  data: {
+	  	'mouseX': Math.round(deltaX),
+	  	'mouseY': Math.round(deltaY)
+	  }
+	});
+	startX = e.targetTouches[0].pageX;
+	startY = e.targetTouches[0].pageY;
+}
+
+document.getElementById('mouse-pad').addEventListener('touchstart', function (e) {
+	startX = e.targetTouches[0].pageX;
+	startY = e.targetTouches[0].pageY;
+
+	this.removeEventListener('touchmove', functionTouchMove);
+	this.addEventListener('touchmove', functionTouchMove);
+});
+// END MOUSE
+</script>
+</body>
+</html>
