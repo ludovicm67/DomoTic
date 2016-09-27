@@ -1,25 +1,50 @@
 // List of commands available
-var cmds = {
-  'volup': 'bin\\nircmd.exe changesysvolume 2000',
-  'voldown': 'bin\\nircmd.exe changesysvolume -2000',
-  'mute': 'bin\\nircmd.exe mutesysvolume 2',
-  'opencd': 'bin\\nircmd.exe cdrom open',
-  'closecd': 'bin\\nircmd.exe cdrom close',
-  'monitoroff': 'bin\\nircmd.exe monitor off',
-  'monitoron': 'bin\\nircmd.exe sendmouse move 0 0'/*'nircmd.exe monitor on'*/,
-  'stop': 'taskkill /F /IM nircmd.exe',
-  'hardstop': 'taskkill /F /IM node.exe',
-  'screen': 'bin\\nircmd.exe savescreenshotfull img/screen.jpg',
-  'explorer': 'bin\\nircmd.exe sendkeypress lwin+e',
-  'desktop': 'bin\\nircmd.exe sendkeypress lwin+d',
-  'lock': 'Rundll32.exe user32.dll,LockWorkStation',
-  'mouseleftclick': 'bin\\nircmd.exe sendmouse left click',
-  'mouserightclick': 'bin\\nircmd.exe sendmouse right click',
-  'mousemove': 'bin\\nircmd.exe sendmouse move',
-  'medianext': 'bin\\nircmd.exe sendkeypress 0xB0', //https://msdn.microsoft.com/en-us/library/dd375731(VS.85).aspx
-  'mediaprev': 'bin\\nircmd.exe sendkeypress 0xB1',
-  'mediastop': 'bin\\nircmd.exe sendkeypress 0xB2',
-  'mediaplaypause': 'bin\\nircmd.exe sendkeypress 0xB3'
+if(process.platform == 'linux') {
+  var cmds = {
+    'volup': 'bin\\nircmd.exe changesysvolume 2000',
+    'voldown': 'bin\\nircmd.exe changesysvolume -2000',
+    'mute': 'bin\\nircmd.exe mutesysvolume 2',
+    'opencd': 'bin\\nircmd.exe cdrom open',
+    'closecd': 'bin\\nircmd.exe cdrom close',
+    'monitoroff': 'bin\\nircmd.exe monitor off',
+    'monitoron': 'bin\\nircmd.exe sendmouse move 0 0'/*'nircmd.exe monitor on'*/,
+    'stop': 'pkill node',
+    'hardstop': 'pkill node',
+    'screen': 'bin\\nircmd.exe savescreenshotfull img/screen.jpg',
+    'explorer': 'bin\\nircmd.exe sendkeypress lwin+e',
+    'desktop': 'bin\\nircmd.exe sendkeypress lwin+d',
+    'lock': 'Rundll32.exe user32.dll,LockWorkStation',
+    'mouseleftclick': 'bin\\nircmd.exe sendmouse left click',
+    'mouserightclick': 'bin\\nircmd.exe sendmouse right click',
+    'mousemove': 'bin\\nircmd.exe sendmouse move',
+    'medianext': 'bin\\nircmd.exe sendkeypress 0xB0', //https://msdn.microsoft.com/en-us/library/dd375731(VS.85).aspx
+    'mediaprev': 'bin\\nircmd.exe sendkeypress 0xB1',
+    'mediastop': 'bin\\nircmd.exe sendkeypress 0xB2',
+    'mediaplaypause': 'bin\\nircmd.exe sendkeypress 0xB3'
+  }
+} else {
+  var cmds = {
+    'volup': 'bin\\nircmd.exe changesysvolume 2000',
+    'voldown': 'bin\\nircmd.exe changesysvolume -2000',
+    'mute': 'bin\\nircmd.exe mutesysvolume 2',
+    'opencd': 'bin\\nircmd.exe cdrom open',
+    'closecd': 'bin\\nircmd.exe cdrom close',
+    'monitoroff': 'bin\\nircmd.exe monitor off',
+    'monitoron': 'bin\\nircmd.exe sendmouse move 0 0'/*'nircmd.exe monitor on'*/,
+    'stop': 'taskkill /F /IM nircmd.exe',
+    'hardstop': 'taskkill /F /IM node.exe',
+    'screen': 'bin\\nircmd.exe savescreenshotfull img/screen.jpg',
+    'explorer': 'bin\\nircmd.exe sendkeypress lwin+e',
+    'desktop': 'bin\\nircmd.exe sendkeypress lwin+d',
+    'lock': 'Rundll32.exe user32.dll,LockWorkStation',
+    'mouseleftclick': 'bin\\nircmd.exe sendmouse left click',
+    'mouserightclick': 'bin\\nircmd.exe sendmouse right click',
+    'mousemove': 'bin\\nircmd.exe sendmouse move',
+    'medianext': 'bin\\nircmd.exe sendkeypress 0xB0', //https://msdn.microsoft.com/en-us/library/dd375731(VS.85).aspx
+    'mediaprev': 'bin\\nircmd.exe sendkeypress 0xB1',
+    'mediastop': 'bin\\nircmd.exe sendkeypress 0xB2',
+    'mediaplaypause': 'bin\\nircmd.exe sendkeypress 0xB3'
+  }
 }
 
 // We load the differents modules required for the app
@@ -29,7 +54,6 @@ var http     = require('http'),
     request  = require('request'),
     exec     = require('child_process').exec,
     port     = 7412;
-
 
 // We create a server
 http.createServer(function (req, res) {
